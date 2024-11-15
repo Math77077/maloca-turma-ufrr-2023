@@ -1,13 +1,11 @@
 # Monitor de Força para Bola de Estresse com Arduino: Feedback com LCD e Buzzer
 
-**Descrição:** Neste projeto, vamos desenvolver um dispositivo de monitoramento de força usando um Arduino Uno R3 com um sensor de força, um display LCD, e um buzzer/piezo. O principal objetivo do tutorial é elaborar uma ferramenta capaz de ajudar no controle de força aplicada em um objeto, oferecendo feedback ao usuário quando certa força é atingida. Dentre as habilidades que serão desenvolidas, consta-se: 
+**Descrição:** Neste projeto, vamos desenvolver um dispositivo de monitoramento de força usando um Arduino Uno R3 com um sensor de força, um display LCD, e um buzzer/piezo. O principal objetivo do tutorial é elaborar uma ferramenta capaz de ajudar no controle de força aplicada em um objeto, oferecendo feedback ao usuário quando certa força é atingida. Este tutorial é ideal para estudantes de eletrônica e programação, e profissionais da saúde engajados na criação de dispositivos de reabilitação e monitoramento de exercícios físicos. Dentre as habilidades que serão desenvolidas, consta-se: 
 - Leitura e Interpretação de Sensores: Como configurar e ler dados de sensores analógicos, neste caso, um sensor de força;
 - Programação em Arduino: Aprenderá a escrever código em C para Arduino, configurando entradas e saídas e aplicando lógica de controle;
 - Controle de Display LCD: Uso do display LCD para exibir informações em tempo real, o que é essencial para projetos de interface de usuário;
 - Lógica de Alerta e Feedback: Implementação de lógica para ativar um buzzer/piezo como forma de feedback quando uma condição específica é atendida;
 - Prototipagem de Circuitos: Conexão de componentes como sensores, displays e atuadores em uma protoboard, promovendo habilidades de montagem e organização de circuitos.
-
-**_Este tutorial é ideal para estudantes de eletrônica e programação, e profissionais da saúde engajados na criação de dispositivos de reabilitação e monitoramento de exercícios físicos_**.
 ---
 
 ## Índice
@@ -54,17 +52,17 @@ O monitoramento da força aplicada durante exercícios de reabilitação é esse
 - **Bibliotecas**: A biblioteca `LiquidCrystal` pode ser instalada como o exemplo mostra abaixo.
 
 1. Procure pelo seguinte ícone, após a instalação da IDE:
-   
+![Caminho para a Biblioteca](../Sistema-Alerta/Caminho-Biblioteca.png)
 2. Na área de texto escreva `LiquidCrystal` e escolha a opção "by Arduino".
 
 ### Passo 2: Configuração das Placas
 
 - Conecte o Arduino Uno ao computador usando um cabo USB.
 - Selecione sua _board_ na opção a seguir:
-
+![Caminho para a Selecionar Board](../Sistema-Alerta/Caminho-Selecionar-Port.png)
 1. Clique em _Select other board and port_;
-2. Selecione a _board Arduino Mega or Mega 2560_;
-3. Por fim selecionar a _Port_ de sua preferência.
+2. Selecione a _board_ **Arduino Mega or Mega 2560**;
+3. Por fim, selecione a _Port_ de sua preferência.
 
 ---
 
