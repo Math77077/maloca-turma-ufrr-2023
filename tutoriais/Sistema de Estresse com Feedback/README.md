@@ -68,55 +68,102 @@ O monitoramento da força aplicada durante exercícios de reabilitação é esse
 
 ## Montagem do Circuito
 
-Insira um diagrama do circuito, ou descreva as conexões principais, incluindo onde cada sensor e atuador deve ser conectado. 
+- Visualização do circuito completo. Para acessá-lo, [clique aqui](https://www.tinkercad.com/things/2YD2mYvcqbi-stress-system-with-feedback-sistema-de-estresse-com-feedback?sharecode=2uoLOfUhdeXqVENqMqu4g0_HpBEeSrgHwDb3ggKBbQA)
+![Circuito completo do sistema de estresse com feedback](imagem-do-circuito.png)
 
-> **Nota**: Use imagens ou diagramas para auxiliar a compreensão.
+### Conexões do Circuito:
+1. Sensor de Força:
+   - Um terminal do sensor vai ser ligado ao 5V(+) da protoboard;
+   - O outro terminal do sensor será conectado na coluna **d**, linha **9**. Na coluna anterior a "d", coluna **c** você puxará uma afiação para conectar ao A0 do Arduino e na coluna **b**, insira um dos terminais do resistor de 1kΩ e conecte o outro terminal na parte GND(-) da protoboard.
+2. Buzzer/Piezo
+   - O terminal positivo do buzzer/piezo será conectado ao pino 9 do Arduino — fio verde;
+   - O terminal negativo do buzzer conecta ao GND — fio preto.
+3. LCD 16x2 — Começando da Esquerda para a Direita:
+   - GND do LCD para GND(-) da _protoboard_;
+   - VCC do LCD para 5V(+) da _protoboard_;
+   - VO para o GND(-) da _protoboard_, isso fará que o contraste do LCD esteja no máximo;
+   - RS do LCD para o pino 12 do Arduino;
+   - RW do LCD para o GND(-) da _protoboard_;
+   - E (Enable/Ligado) do LCD para o pino 11 do Arduino;
+   - DB0 até DB3 não serão usados, por isso pule eles;
+   - DB4, DB5, DB6 e DB7 do LCD para os pinos 5, 4, 3 e 2 do Arduino, respectivamente;
+   - LED (Backlight/Luz de Fundo) do LCD para um resistor de 220Ω e conecte esse resistor ao 5V(+) da _protoboard_;
+   - O último LED, você pode conectá-lo ao GND(-) da _protoboard_.
+>[!WARNING]
+>Certifique-se de que todas as conexões estão firmes e corretas antes de prosseguir com a programação. Em caso de dúvida, refaça esta etapa consultando diretamente a simulação, link acima.
 
 ---
 
 ## Programação
 
-### Passo 1: Configuração dos Sensores e Atuadores
-
-Forneça o código para a configuração dos sensores. Por exemplo, para medir temperatura e batimentos cardíacos:
-
-**Exemplo em C para ESP32:**
+### Passo 1: Configuração do LCD
+- Esta linha inclui a biblioteca `LiquidCrystal`, permitindo que controlemos o display LCD.
 
 ```cpp
-#include <DHT.h>
+#include <LiquidCrystal.h>
+```
 
-#define DHTPIN 2     // Pino do sensor DHT
-#define DHTTYPE DHT11 
+- Aqui, estamos criando um objeto `lcd` do tipo `LiquidCrystal`. Isso possibilita que o objeto configurado controle o display LCD com os pinos específicos conectados ao Arduino.
 
-DHT dht(DHTPIN, DHTTYPE);
+```cpp
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2); //12 = RS do LCD; 11 = Enable do LCD; 5 até 2 = DB4 até DB7 do LCD
+```
 
-void setup() {
-  Serial.begin(9600);
-  dht.begin();
-}
+### Passo 2: Processamento e Lógica do Sistama
 
-void loop() {
-  float temp = dht.readTemperature();
-  Serial.println(temp);
-  delay(2000);
+- Declaração das variáveis de pinos e limite/meta a ser alcançada.
+
+```cpp
+const int forceSensorPin = A0; // Define A0 como a entrada do sensor de força, é partir dessa declaração que iremos ler os valores de pressão aplicados
+const int buzzerPin = 9; // Define o pino 9 como a saída para o buzzer/piezo
+const int threshold = 350; // Define 350 como o limite da força, essa seria a meta a ser atingida
+```
+
+- Inicializar o LCD e definir pinos ou como entrada, ou como saída.
+
+```cpp
+void setup() { //A funcao void setup() e executada para configurar os pinos e inicializar o LCD
+  lcd.begin(16, 2); //Inicializa o display LCD com 16 colunas e 2 linhas, configurando-o para exibir texto
+  lcd.setCursor(0, 0); //Coloca o cursor na primeira linha, primeira coluna
+  lcd.print("Monitor de");//Exibe "Monitor de" na primeira linha
+  
+  lcd.setCursor(0, 1); //Coloca o cursor na segunda linha, primeira coluna
+  lcd.print("Estresse");//Exibe "Estresse" na segunda linha  
+
+  pinMode(forceSensorPin, INPUT);//Define o pino do sensor de força como uma entrada para ler valores
+  pinMode(buzzerPin, OUTPUT);//Define o pino do buzzer/piezo como saida, permitindo que o Arduino ative o buzzer
+
+  delay(2000);//Espera 2 segundos para que o usuario possa ver a mensagem 'Monitor de Estresse'
+  lcd.clear();//Limpa o display LCD para preparar as proximas informacoes
 }
 ```
 
-**Exemplo em Python para Raspberry Pi:**
+- Lógica do Sistema.
 
-```python
-import Adafruit_DHT
+```cpp
+void loop() { // a funcao void loop() e executada repetidamente, permitindo a leitura continua do sensor e atualizacao do LCD
+  int forceValue = analogRead(forceSensorPin); //Le o valor analogico do sensor de forca e armazena na variavel forceValue
 
-sensor = Adafruit_DHT.DHT11
-pin = 4  # Pino GPIO
+  lcd.setCursor(0, 0);
+  lcd.print("Forca: ");
+  lcd.print(forceValue); //Exibe o valor da forca medida pelo sensor no LCD
+  lcd.print("    "); //Insere espaços em branco para limpar texto residual da linha anterior do LCD
 
-humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
-print(f"Temperatura: {temperature}ºC")
+  if (forceValue > threshold) { //Verifica se o valor da forca e maior que o limite definido thres
+    lcd.setCursor(0, 1);
+    lcd.print("Bom Trabalho!      "); 
+    digitalWrite(buzzerPin, HIGH); 
+    delay(1000);                   
+    digitalWrite(buzzerPin, LOW);  
+  } else {
+    lcd.setCursor(0, 1);
+    lcd.print("Pressione!");
+  }
+
+  delay(500);
+}
 ```
 
-### Passo 2: Processamento e Lógica de Alerta
-
-Adicione a lógica para processar os dados e acionar atuadores, como LEDs ou buzzer, caso as leituras excedam um determinado limite.
 
 ---
 
