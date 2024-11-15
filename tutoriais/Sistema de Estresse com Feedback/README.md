@@ -1,7 +1,12 @@
 # Título do Tutorial
 
-**Descrição:** Breve introdução ao tutorial, explicando o objetivo do projeto, as habilidades que serão adquiridas e o público-alvo. Ex.: "Neste tutorial, vamos desenvolver um sistema de monitoramento de sinais vitais usando uma ESP32 com sensores de temperatura e frequência cardíaca."
-
+**Descrição:** Neste projeto, vamos desenolver um dispositivo de monitoramento de força usando um Arduino Uno R3 com um sensor de força, um display LCD, e um buzzer/piezo. O principal objetivo do tutorial é elaborar uma ferramenta capaz de ajudar no controle de força aplicada em um objeto, oferecendo feedback ao usuário quando certa força é atingida. Dentre as habilidades que serão desenvolidas, consta-se: 
+- Leitura e Interpretação de Sensores: Como configurar e ler dados de sensores analógicos, neste caso, um sensor de força;
+- Programação em Arduino: Aprenderá a escrever código em C/C++ para Arduino, configurando entradas e saídas e aplicando lógica de controle;
+- Controle de Display LCD: Uso do display LCD para exibir informações em tempo real, o que é essencial para projetos de interface de usuário;
+- Lógica de Alerta e Feedback: Implementação de lógica para ativar um buzzer como forma de feedback quando uma condição específica é atendida;
+- Prototipagem de Circuitos: Conexão de componentes como sensores, displays e atuadores em uma protoboard, promovendo habilidades de montagem e organização de circuitos.
+Este tutorial é ideal para estudantes de eletrônica e programação, e profissionais da saúde engajados na criação de dispositivos de reabilitação e monitoramento de exercícios físicos.
 ---
 
 ## Índice
