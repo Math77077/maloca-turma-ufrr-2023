@@ -7,7 +7,7 @@
 - Lógica de Alerta e Feedback: Implementação de lógica para ativar um buzzer/piezo como forma de feedback quando uma condição específica é atendida;
 - Prototipagem de Circuitos: Conexão de componentes como sensores, displays e atuadores em uma protoboard, promovendo habilidades de montagem e organização de circuitos.
 
-*Este tutorial é ideal para estudantes de eletrônica e programação, e profissionais da saúde engajados na criação de dispositivos de reabilitação e monitoramento de exercícios físicos*.
+**_Este tutorial é ideal para estudantes de eletrônica e programação, e profissionais da saúde engajados na criação de dispositivos de reabilitação e monitoramento de exercícios físicos_**.
 ---
 
 ## Índice
@@ -33,16 +33,16 @@ O monitoramento da força aplicada durante exercícios de reabilitação é esse
 
 ### Hardware
 
-- **Placa**: Arduino, ESP32, Raspberry Pi
-- **Sensores**: Detalhe cada sensor, como sensores de temperatura, oxímetro, acelerômetro, entre outros
-- **Atuadores**: Como LEDs, buzzer, relés, etc.
-- **Outros componentes**: Jumpers, resistores, display LCD, etc.
+- **Placa**: Arduino Mega ou Mega 2560.
+- **Sensores**: Sensor de força (FSR).
+- **Atuadores**: Buzzer e Display LCD 16x2.
+- **Outros componentes**: Resistores (1kΩ e 220Ω) e uma protoboard.
 
 ### Software
 
-- **Linguagens**: C/C++ para Arduino e ESP32, Python para Raspberry Pi
-- **IDE**: Arduino IDE, Thonny para Raspberry Pi, VS Code (opcional)
-- **Bibliotecas**: Liste as bibliotecas necessárias, como `Adafruit_Sensor`, `DHT`, entre outras.
+- **Linguagens**: C
+- **IDE**: Arduino IDE, Tinkercad(opcional)
+- **Bibliotecas**: `LiquidCrystal`(para controle do display LCD).
 
 ---
 
@@ -50,19 +50,21 @@ O monitoramento da força aplicada durante exercícios de reabilitação é esse
 
 ### Passo 1: Instalação do Software
 
-- **Arduino IDE**: Instruções para instalar e configurar a IDE do Arduino para ESP32/Arduino.
-- **Thonny Python**: Configuração do Thonny para programar em Python no Raspberry Pi.
-- **Bibliotecas**: Como instalar as bibliotecas necessárias. Exemplo:
+- **Arduino IDE**: [Baixe](https://www.arduino.cc/en/software) e instale a IDE do Arduino para programar o Arduino Uno..
+- **Bibliotecas**: A biblioteca `LiquidCrystal` pode ser instalada como o exemplo mostra abaixo.
 
-```bash
-# Instalar bibliotecas do Python
-pip install Adafruit_DHT
-```
+1. Procure pelo seguinte ícone, após a instalação da IDE:
+   
+2. Na área de texto escreva `LiquidCrystal` e escolha a opção "by Arduino".
 
 ### Passo 2: Configuração das Placas
 
-- **Arduino/ESP32**: Passos para configurar a placa e selecionar a porta correta na IDE.
-- **Raspberry Pi**: Configuração do GPIO para comunicação com os sensores.
+- Conecte o Arduino Uno ao computador usando um cabo USB.
+- Selecione sua _board_ na opção a seguir:
+
+1. Clique em _Select other board and port_;
+2. Selecione a _board Arduino Mega or Mega 2560_;
+3. Por fim selecionar a _Port_ de sua preferência.
 
 ---
 
