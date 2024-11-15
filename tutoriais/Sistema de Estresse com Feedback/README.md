@@ -70,6 +70,8 @@ O monitoramento da força aplicada durante exercícios de reabilitação é esse
 
 - Visualização do circuito completo. Para acessá-lo, [clique aqui](https://www.tinkercad.com/things/2YD2mYvcqbi-stress-system-with-feedback-sistema-de-estresse-com-feedback?sharecode=2uoLOfUhdeXqVENqMqu4g0_HpBEeSrgHwDb3ggKBbQA)
 ![Circuito completo do sistema de estresse com feedback](imagem-do-circuito.png)
+>[!NOTE]
+>Se é sua primeira vez usando um LCD, é bem capaz que você tenha que soldar pinos nele para conectá-lo a _protoboard_ e, enfim, seguir para as Conexões do Circuito. Veja o exemplo abaixo de como ficaria a afiação após a conexão do LCD na _protoboard_:
 
 ### Conexões do Circuito:
 1. Sensor de Força:
@@ -152,15 +154,15 @@ void loop() { // a funcao void loop() e executada repetidamente, permitindo a le
   if (forceValue > threshold) { //Verifica se o valor da forca e maior que o limite definido thres
     lcd.setCursor(0, 1);
     lcd.print("Bom Trabalho!      "); 
-    digitalWrite(buzzerPin, HIGH); 
-    delay(1000);                   
-    digitalWrite(buzzerPin, LOW);  
-  } else {
+    digitalWrite(buzzerPin, HIGH); //Ativa o buzzer/piezo, emitindo um som como feedback para o usuario
+    delay(1000); //Mantem o buzzer/piezo ligado por 1 segundo                  
+    digitalWrite(buzzerPin, LOW);  //Desativa o buzzer/piezo
+  } else { //Caso o valor da forca seja menor que o limite, o bloco else e executado
     lcd.setCursor(0, 1);
-    lcd.print("Pressione!");
+    lcd.print("Pressione Mais!"); //Exibe a mensagem "Pressione Mais!"
   }
 
-  delay(500);
+  delay(500);//Adiciona um atraso de meio segundo para suavizar as leituras e dar tempo para o usuario ver as mensagens
 }
 ```
 
@@ -171,9 +173,9 @@ void loop() { // a funcao void loop() e executada repetidamente, permitindo a le
 
 Descreva os testes para validar cada parte do projeto:
 
-1. **Testando Sensores**: Verifique se as leituras são consistentes e corretas.
-2. **Validação dos Atuadores**: Confirme que os atuadores funcionam corretamente.
-3. **Monitoramento em Tempo Real**: Teste o sistema completo em condições simuladas para garantir que funciona conforme o esperado.
+1. **Testando o Sensor de Força:** Pressione o sensor de força e observe o valor exibido no LCD. O valor deve aumentar conforme a pressão aumenta.
+2. **Validando o Buzzer:** Aplique pressão suficiente para exceder o limite. O buzzer deve emitir um som e o LCD deve exibir a mensagem "Bom Trabalho!".
+3. **Monitoramento Contínuo:** Solte o sensor e veja a mensagem "Pressione Mais!" reaparecer. Continue testando para garantir que o sistema responde de acordo com o limite de força configurado.
 
 ---
 
@@ -181,16 +183,17 @@ Descreva os testes para validar cada parte do projeto:
 
 Sugestões para melhorar o projeto, como:
 
-- Adicionar comunicação Wi-Fi (ESP32) para enviar dados para uma nuvem.
-- Integrar um banco de dados para registro das leituras.
-- Conectar-se a uma aplicação móvel para visualização remota.
+- Ajuste do Limite: Adicionar um potênciometro para ajustar o limite da forca dinamicamente, sem a necessidade de modificar o código;
+- Registro de Leituras: Salve os valores de força em uma memória externa ou envie para o ThingSpeak para uma análise posterior;
+- Conexão com Aplicativo Móvel: Integrar o sistema com um módulo Bluetooth para enviar dados para um aplicativo móvel e monitorar o progresso remotamente;
+- Alarme Vibratório: Substitua ou adicione como complemento ao buzzer/piezo um motor vibratório para feedback silencioso.
 
 ---
 
 ## Referências
 
-Liste todas as referências e links úteis para guias, bibliotecas, e materiais adicionais que ajudem a complementar o tutorial.
+1. [Documentação da Biblioteca LiquidCrystal](https://docs.arduino.cc/libraries/liquidcrystal/)
+2. [Tinkercad - Circuitos e Simulação de Arduino](https://www.tinkercad.com/)
 
 ---
 
-Espero que esse modelo ajude a organizar o conteúdo e fornecer uma estrutura clara e completa para tutoriais de IoT no contexto da saúde.
