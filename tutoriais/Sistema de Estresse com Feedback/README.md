@@ -1,12 +1,13 @@
-# Título do Tutorial
+# Monitor de Força para Bola de Estresse com Arduino: Feedback com LCD e Buzzer
 
-**Descrição:** Neste projeto, vamos desenolver um dispositivo de monitoramento de força usando um Arduino Uno R3 com um sensor de força, um display LCD, e um buzzer/piezo. O principal objetivo do tutorial é elaborar uma ferramenta capaz de ajudar no controle de força aplicada em um objeto, oferecendo feedback ao usuário quando certa força é atingida. Dentre as habilidades que serão desenvolidas, consta-se: 
+**Descrição:** Neste projeto, vamos desenvolver um dispositivo de monitoramento de força usando um Arduino Uno R3 com um sensor de força, um display LCD, e um buzzer/piezo. O principal objetivo do tutorial é elaborar uma ferramenta capaz de ajudar no controle de força aplicada em um objeto, oferecendo feedback ao usuário quando certa força é atingida. Dentre as habilidades que serão desenvolidas, consta-se: 
 - Leitura e Interpretação de Sensores: Como configurar e ler dados de sensores analógicos, neste caso, um sensor de força;
-- Programação em Arduino: Aprenderá a escrever código em C/C++ para Arduino, configurando entradas e saídas e aplicando lógica de controle;
+- Programação em Arduino: Aprenderá a escrever código em C para Arduino, configurando entradas e saídas e aplicando lógica de controle;
 - Controle de Display LCD: Uso do display LCD para exibir informações em tempo real, o que é essencial para projetos de interface de usuário;
-- Lógica de Alerta e Feedback: Implementação de lógica para ativar um buzzer como forma de feedback quando uma condição específica é atendida;
+- Lógica de Alerta e Feedback: Implementação de lógica para ativar um buzzer/piezo como forma de feedback quando uma condição específica é atendida;
 - Prototipagem de Circuitos: Conexão de componentes como sensores, displays e atuadores em uma protoboard, promovendo habilidades de montagem e organização de circuitos.
-Este tutorial é ideal para estudantes de eletrônica e programação, e profissionais da saúde engajados na criação de dispositivos de reabilitação e monitoramento de exercícios físicos.
+
+*Este tutorial é ideal para estudantes de eletrônica e programação, e profissionais da saúde engajados na criação de dispositivos de reabilitação e monitoramento de exercícios físicos*.
 ---
 
 ## Índice
@@ -24,7 +25,7 @@ Este tutorial é ideal para estudantes de eletrônica e programação, e profiss
 
 ## Introdução
 
-Explique o propósito do projeto em um contexto de saúde. Por exemplo, o monitoramento de sinais vitais em tempo real para pacientes, ou um sistema de alarme para quedas. Inclua uma breve visão sobre como o projeto se integra ao ambiente IoT.
+O monitoramento da força aplicada durante exercícios de reabilitação é essencial para verificação do progresso de pacientes em tratamentos físicos, por exemplo na recuperação muscular ou fortalemento de membros. Através do dispositivo desse tutorial implementado em uma bola de estresse, permite-se ter um acompanhamento em tempo real da força aplica pelo paciente, dando um feedback visual e sonoro toda vez que a meta estipulada é atingida. Essa ferramenta se conecta ao ambiente IoT ao ter a capacidade de receber dados por meio de sensores e, com melhorias adicionais, transmitir dados para outros sistemas. 
 
 ---
 
