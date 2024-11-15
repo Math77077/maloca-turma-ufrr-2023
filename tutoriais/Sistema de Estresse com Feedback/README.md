@@ -71,7 +71,10 @@ O monitoramento da força aplicada durante exercícios de reabilitação é esse
 - Visualização do circuito completo. Para acessá-lo, [clique aqui](https://www.tinkercad.com/things/2YD2mYvcqbi-stress-system-with-feedback-sistema-de-estresse-com-feedback?sharecode=2uoLOfUhdeXqVENqMqu4g0_HpBEeSrgHwDb3ggKBbQA)
 ![Circuito completo do sistema de estresse com feedback](imagem-do-circuito.png)
 >[!NOTE]
->Se é sua primeira vez usando um LCD, é bem capaz que você tenha que soldar pinos nele para conectá-lo a _protoboard_ e, enfim, seguir para as Conexões do Circuito. Veja o exemplo abaixo de como ficaria a afiação após a conexão do LCD na _protoboard_:
+>Se é sua primeira vez usando um LCD, é bem capaz que você tenha que soldar pinos nele para conectá-lo a _protoboard_ e, enfim, seguir para as Conexões do Circuito. Veja o exemplo abaixo de como ficaria a afiação do LCD após a conexão na _protoboard_:
+<p align="center">
+   <img src="LCD-pinado-na-protoboard.png" alt="LCD pinado na protoboard" />
+</p>
 
 ### Conexões do Circuito:
 1. Sensor de Força:
