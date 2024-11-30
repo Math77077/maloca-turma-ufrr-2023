@@ -70,9 +70,33 @@ O dispositivo em questão é uma solução prática e acessível para apoiar pac
 
 ## Montagem do Circuito
 
-Insira um diagrama do circuito, ou descreva as conexões principais, incluindo onde cada sensor e atuador deve ser conectado. 
+- Visualização do circuito completo. Para acessá-lo, [clique aqui](https://www.tinkercad.com/things/94V5gX0DVnz-tactile-sensation-trainer-disp-de-treinamento-tatil?sharecode=-OK07sNZnsPHU7p-FayuRfy9U6VkTNLpAw3AULmx_Pw)
+![Circuito completo do dispositivo de treinamento de sensação tátil com feedback](circuito-de-treinamento-de-sensacao-tatil.png)
+>[!NOTE]
+>Se é sua primeira vez usando um LCD, é bem capaz que você tenha que soldar pinos nele para conectá-lo a _protoboard_ e, enfim, seguir para as Conexões do Circuito.
 
-> **Nota**: Use imagens ou diagramas para auxiliar a compreensão.
+### Conexões do Circuito:
+1. Sensor Flexível:
+   - Um terminal no pino A0, conecte-o como o cabo verde demonstra na figura;
+   - Conecte o outro terminal ao 5V(+) da _protoboard_;
+   - Abaixo da conexão do terminal no pino A0, insira um resistor de 1kΩ no GND(-) da _protoboard_.
+2. Motor Vibratório:
+   - Pino positivo ao pino digital 6 e negativo ao GND(-) da _protoboard_;
+3. Receptor IR:
+   - Pino de dados(OUT) ao pino 2, Power ao 5V(+) da _protoboard_, GND ao GND(-) da _protoboard_.
+5. LCD 16x2 — Começando da Esquerda para a Direita:
+   - GND do LCD para GND(-) da _protoboard_;
+   - VCC do LCD para 5V(+) da _protoboard_;
+   - VO para o GND(-) da _protoboard_, isso fará que o contraste do LCD esteja no máximo;
+   - RS do LCD para o pino 7 do Arduino;
+   - RW do LCD para o GND(-) da _protoboard_;
+   - E (Enable/Ligado) do LCD para o pino 8 do Arduino;
+   - DB0 até DB3 não serão usados, por isso pule eles;
+   - DB4, DB5, DB6 e DB7 do LCD para os pinos 9, 10, 11 e 12 do Arduino, respectivamente;
+   - LED (Backlight/Luz de Fundo) do LCD para um resistor de 220Ω e conecte esse resistor ao 5V(+) da _protoboard_;
+   - O último LED, você pode conectá-lo ao GND(-) da _protoboard_.
+>[!WARNING]
+>Certifique-se de que todas as conexões estão firmes e corretas antes de prosseguir com a programação. Em caso de dúvida, refaça esta etapa consultando diretamente a simulação, link acima.
 
 ---
 
