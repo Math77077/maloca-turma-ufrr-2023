@@ -70,7 +70,7 @@ O dispositivo em questão é uma solução prática e acessível para apoiar pac
 
 ## Montagem do Circuito
 
-- Visualização do circuito completo. Para acessá-lo, [clique aqui](https://www.tinkercad.com/things/94V5gX0DVnz-tactile-sensation-trainer-disp-de-treinamento-tatil?sharecode=-OK07sNZnsPHU7p-FayuRfy9U6VkTNLpAw3AULmx_Pw)
+- Visualização do circuito completo. Para acessá-lo, [clique aqui](https://www.tinkercad.com/things/94V5gX0DVnz-tactile-sensation-trainer-disp-de-treinamento-tatil?sharecode=qD5HM9E1MGavEF_37VUUt3lIj1bFfyhjSw5nbfDZV0k)
 ![Circuito completo do dispositivo de treinamento de sensação tátil com feedback](circuito-de-treinamento-de-sensacao-tatil.png)
 >[!NOTE]
 >Se é sua primeira vez usando um LCD, é bem capaz que você tenha que soldar pinos nele para conectá-lo a _protoboard_ e, enfim, seguir para as Conexões do Circuito.
@@ -129,7 +129,6 @@ LiquidCrystal lcd(7, 8, 9, 10, 11, 12); //7 = RS do LCD; 8 = Enable do LCD; 9 at
 ```cpp
 int flexValue = 0;     //Valor bruto do sensor flexivel             
 int mappedValue = 0;   //Valor mapeado de progresso (0-100)             
-int threshold = 700;   //Limite para ativacao do motor vibratorio             
 bool trainingStarted = false;  //Indicador do estado de treinamento  
 int button = 0;  //Valor do botao do controle remoto IR
 ```
@@ -230,7 +229,7 @@ void loop() {
     if (mappedValue < 50) { //Se o progresso for menor que 50%
       lcd.print("Continue!     "); //Motiva o usuario a continuar tentando
     } else if (mappedValue < 90) { //Se o progresso estiver entre 50% e 90%
-      lcd.print("Quase la!"); //Incentiva o usuario, demonstrando que esta proximo
+      lcd.print("Quase la!       "); //Incentiva o usuario, demonstrando que esta proximo
     } else { //Se o progresso for 90% ou maior
       lcd.print("Bom Trabalho!       "); //Parabeniza o usuario pelo o progresso
     }
