@@ -104,57 +104,108 @@ O dispositivo em questão é uma solução prática e acessível para apoiar pac
 
 ### Passo 1: Configuração dos Sensores e Atuadores
 
+#### Bibliotecas
 ```cpp
-#include <LiquidCrystal.h>
-#include <IRremote.h>
+#include <LiquidCrystal.h> //Controla o LCD 16x2, simplificando comandos para printar texto ou mover o cursor
+#include <IRremote.h> // Decodifica os sinais de um controle remoto infravermelho, permitindo que o Arduino entenda o pressionamento de botoes
+```
 
-const int flexPin = A0;             
-const int vibrationMotorPin = 6;    
-const int receiverPin = 2;          
+#### Atribuição de Pinos
+```cpp
+const int flexPin = A0;    //Sensor flexivel conectado ao pino analogo A0         
+const int vibrationMotorPin = 6;    //Motor vibratorio conectado ao pino digital 6 (Compativel com PWM)
+const int receiverPin = 2; //Receptor IR conectado ao pino digital 2
+```
+  - `flexPin`: Lê a resistência do sensor flexível. A resistência muda a medida que o dedo se mexe;
+  - `vibrationMotorPin`: Ativa o motor vibratório para fornecer o feedback tátil. Além disso, o pino 6 suporta PWM para controle preciso;
+  - `receiverPin`: Lê as informações do receptor IR, no qual decodifica os sinais do controle remoto.
 
-LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
+#### Configuração do LCD
+```cpp
+LiquidCrystal lcd(7, 8, 9, 10, 11, 12); //7 = RS do LCD; 8 = Enable do LCD; 9 até 12 = DB4 até DB7 do LCD
+```
 
-int flexValue = 0;                  
-int mappedValue = 0;                
-int threshold = 700;                
-bool trainingStarted = false;       
-int button = 0;                     
+#### Variavéis Globais
+```cpp
+int flexValue = 0;     //Valor bruto do sensor flexivel             
+int mappedValue = 0;   //Valor mapeado de progresso (0-100)             
+int threshold = 700;   //Limite para ativacao do motor vibratorio             
+bool trainingStarted = false;  //Indicador do estado de treinamento  
+int button = 0;  //Valor do botao do controle remoto IR
+```
+- `flexValue`: Armazena o valor analógico bruto (0-1023) lido do sensor flexível. Este valor representa o ângulo de flexão do dedo;
+- `mappedValue`: Será responsável em converter o valor bruto `flexValue` em uma porcentagem (0-100%) para demonstrar o progresso do treinamento de forma clara e intuitiva;
+- `threshold`: Um valor de referência que poderia ser usado para definir um limite de ativação;
+- `trainingStarted`: Um indicador booleano que rastreia se o treinamento está ativo. Caso `true`, logo o treinamento está em andamento, caso contrário, `false`, o treinamento está pausado ou finalizado;
+- `button`: Será responsável em armazenar o botão pressionado no controle remoto IR, após decodificá-lo.
 
+#### Função mapCodeToButton()
+```cpp
 int mapCodeToButton(unsigned long code) {
-  if ((code & 0x0000FFFF) == 0x0000BF00) {
-    code >>= 16;
-    if (((code >> 8) ^ (code & 0x00FF)) == 0x00FF) {
-      return code & 0xFF;
+  if ((code & 0x0000FFFF) == 0x0000BF00) { //Passo 1: Valida a estrutura do codigo
+    code >>= 16;                           // Passo 2: Extrai a porcao relevante
+    if (((code >> 8) ^ (code & 0x00FF)) == 0x00FF) {  //Passo 3: Valida o checksum
+      return code & 0xFF;                  //Passo 4: Extrai o valor do botão
     }
   }
-  return -1;
+  return -1;                               //Passo 5: Retorna -1 se o código for invalido
 }
+```
+Para compreender melhor essa função, tenhamos em mente as seguintes coisas:
+1. ```cpp
+   // Os botoes estao nessa ordem no controle:
+   //    0   1   2
+   //    4   5   6
+   //    8   9  10
+   //   12  13  14
+   //   16  17  18
+   //   20  21  22
+   //   24  25  26
+   ```
+2. Entretando, eles não vem nesse formato decimal, eles são recebidos como **hex code** e seguem o formato: 0xiivvBF00. Onde "vv" é o valor do botão, e "ii" é o bit inverso. Por exemplo, o botão de ligar é 0xFF00BF00.
+3. Assim, a ideia de usar essa função é para pegar o sinal bruto recebido do controle remoto e o traduzir em um número de botão correspondente.
+> [!TIP]
+> Se você tem interesse em saber mais sobre como funciona e a ideia por trás do Controle Remoto IR e Receptor IR com Arduino, verifique [IR Remote and Receiver with Arduino Tutorial (4 Examples)](https://www.makerguides.com/ir-receiver-remote-arduino-tutorial/).
 
+#### Função readInfrared()
+```cpp
 int readInfrared() {
-  int result = -1;
-  if (IrReceiver.decode()) {
-    unsigned long code = IrReceiver.decodedIRData.decodedRawData;
+  int result = -1; //Inicializa a variavel "result" com -1, demonstrando que nenhum botao valido foi pressionado
+  if (IrReceiver.decode()) { //Verifica se o receptor IR recebeu um sinal
+    unsigned long code = IrReceiver.decodedIRData.decodedRawData; // Extrai os dados brutos (raw data) do sinal IR recebido
     result = mapCodeToButton(code);
-    IrReceiver.resume();
+    IrReceiver.resume(); //Retoma a escuta para o proximo sinal IR
   }
-  return result;
+  return result; //Retorna o resultado, podendo ser um valor de botao valido ou -1 caso nenhum sinal tenha sido decodificado
 }
+```
+1. Propósito:
+   - Ler e decodificar o sinal IR/infravermelho.
+2. Passos:
+   - Avalia se o receptor IR recebeu o sinal;
+   - Decodifica o sinal em dado bruto(`decodeRawData`);
+   - Mapea o dado bruto em um botão usando a função `mapCodeToButton()`;
+   - Continua a receber o próximo sinal.
 
+#### Função setup()
+```cpp
 void setup() {
-  pinMode(flexPin, INPUT);
-  pinMode(vibrationMotorPin, OUTPUT);
+  pinMode(flexPin, INPUT); //Define o pino do sensor flexivel como entrada
+  pinMode(vibrationMotorPin, OUTPUT); //Define o pino do motor de vibracao como saida
 
-  lcd.begin(16, 2);
-  lcd.print("Treino Tatil");
-  lcd.setCursor(0, 1);
-  lcd.print("Aperte Comecar");
+  lcd.begin(16, 2); //Inicializa o LCD com 16 colunas e 2 linhas
+  lcd.print("Treino Tatil"); //Exibe a mensagem inicial no LCD
+  lcd.setCursor(0, 1); //Move o cursor para a segunda linha
+  lcd.print("Aperte Comecar"); //Instrui o usuario a iniciar o treinamento
   
-  IrReceiver.begin(receiverPin);
-  Serial.begin(9600);
+  IrReceiver.begin(receiverPin); //Ativa o receptor infravermelho no pino especificado
+  Serial.begin(9600); //Inicia a comunicacao serial com a taxa de transmissao de 9600 bps (usa-se para a depuracao)
 }
 ```
 
 ### Passo 2: Processamento e Lógica de Alerta
+
+#### Função loop()
 
 ```cpp
 void loop() {
@@ -191,7 +242,11 @@ void loop() {
     }
   }
 }
+```
 
+#### Função handleIRInput()
+
+```cpp
 void handleIRInput(int button) {
   switch (button) {
     case 0: 
@@ -219,9 +274,9 @@ void handleIRInput(int button) {
 
 ## Teste e Validação
 
-Descreva os testes para validar cada parte do projeto:
+Estes são testes para validar cada parte do projeto:
 
-1. **Testar o Sensor Flexível**: Abra o monitor serial e verifique os valores do sensor quando dobrado e relaxado..
+1. **Testar o Sensor Flexível**: Abra o monitor serial e verifique os valores do sensor quando dobrado e relaxado.
 2. **Testar o Motor Vibratório**: Confirme que o motor vibra quando o progresso atinge 90%.
 3. **Validar o Controle Remoto**: Teste os botões para iniciar e parar o treinamento.
 4. **Monitoramento Contínuo**: Verifique se as messagens "Comecando Treino" e "Treino parado" estão aparecendo no display. Dobre o sensor e veja as mensagens "Continue!", "Quase la!" e "Bom Trabalho!  aparecerem. Continue testando para garantir que o sistema responda de acordo com o limite configurado, logo confirme se a mensagem "Bom Trabalho!" aparece somente quando for 90% ou maior.
@@ -241,8 +296,9 @@ Sugestões para melhorar o projeto, como:
 ## Referências
 
 1. [Documentação da Biblioteca LiquidCrystal](https://docs.arduino.cc/libraries/liquidcrystal/)
-2. [Documentação da Biblioteca IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote)
-3. [Tinkercad - Circuitos e Simulação de Arduino](https://www.tinkercad.com/)
+2. [Tinkercad - Circuitos e Simulação de Arduino](https://www.tinkercad.com/)
+>[!NOTE]
+ >3. Este tutorial utiliza uma implementação compatível com a biblioteca IRremote. Consulte a documentação oficial em [IRremote GitHub Documentation](https://github.com/Arduino-IRremote/Arduino-IRremote) para garantir a compatibilidade com a versão mais recente da biblioteca.
 
 ---
 
