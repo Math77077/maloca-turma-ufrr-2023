@@ -104,45 +104,116 @@ O dispositivo em questão é uma solução prática e acessível para apoiar pac
 
 ### Passo 1: Configuração dos Sensores e Atuadores
 
-Forneça o código para a configuração dos sensores. Por exemplo, para medir temperatura e batimentos cardíacos:
-
-**Exemplo em C para ESP32:**
-
 ```cpp
-#include <DHT.h>
+#include <LiquidCrystal.h>
+#include <IRremote.h>
 
-#define DHTPIN 2     // Pino do sensor DHT
-#define DHTTYPE DHT11 
+const int flexPin = A0;             
+const int vibrationMotorPin = 6;    
+const int receiverPin = 2;          
 
-DHT dht(DHTPIN, DHTTYPE);
+LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
+
+int flexValue = 0;                  
+int mappedValue = 0;                
+int threshold = 700;                
+bool trainingStarted = false;       
+int button = 0;                     
+
+int mapCodeToButton(unsigned long code) {
+  if ((code & 0x0000FFFF) == 0x0000BF00) {
+    code >>= 16;
+    if (((code >> 8) ^ (code & 0x00FF)) == 0x00FF) {
+      return code & 0xFF;
+    }
+  }
+  return -1;
+}
+
+int readInfrared() {
+  int result = -1;
+  if (IrReceiver.decode()) {
+    unsigned long code = IrReceiver.decodedIRData.decodedRawData;
+    result = mapCodeToButton(code);
+    IrReceiver.resume();
+  }
+  return result;
+}
 
 void setup() {
+  pinMode(flexPin, INPUT);
+  pinMode(vibrationMotorPin, OUTPUT);
+
+  lcd.begin(16, 2);
+  lcd.print("Treino Tatil");
+  lcd.setCursor(0, 1);
+  lcd.print("Aperte Comecar");
+  
+  IrReceiver.begin(receiverPin);
   Serial.begin(9600);
-  dht.begin();
 }
-
-void loop() {
-  float temp = dht.readTemperature();
-  Serial.println(temp);
-  delay(2000);
-}
-```
-
-**Exemplo em Python para Raspberry Pi:**
-
-```python
-import Adafruit_DHT
-
-sensor = Adafruit_DHT.DHT11
-pin = 4  # Pino GPIO
-
-humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
-print(f"Temperatura: {temperature}ºC")
 ```
 
 ### Passo 2: Processamento e Lógica de Alerta
 
-Adicione a lógica para processar os dados e acionar atuadores, como LEDs ou buzzer, caso as leituras excedam um determinado limite.
+```cpp
+void loop() {
+  button = readInfrared();
+  if (button >= 0) {
+    handleIRInput(button);
+  }
+
+  if (trainingStarted) {
+    flexValue = analogRead(flexPin);
+    mappedValue = map(flexValue, 33, 6, 0, 100); 
+    mappedValue = constrain(mappedValue, 0, 100);         
+	
+    lcd.setCursor(0, 0);
+    lcd.print("Progresso:       ");
+    lcd.setCursor(0, 0);
+    lcd.print("Progresso: ");
+    lcd.print(mappedValue);
+    lcd.print("%");
+
+    lcd.setCursor(0, 1);
+    if (mappedValue < 50) {
+      lcd.print("Continue!     ");
+    } else if (mappedValue < 90) {
+      lcd.print("Quase la!");
+    } else {
+      lcd.print("Bom Trabalho!       ");
+    }
+
+    if (mappedValue >= 90) {
+      digitalWrite(vibrationMotorPin, HIGH);
+    } else {
+      digitalWrite(vibrationMotorPin, LOW);
+    }
+  }
+}
+
+void handleIRInput(int button) {
+  switch (button) {
+    case 0: 
+      trainingStarted = true;
+      lcd.clear();
+      lcd.print("Comecando Treino");
+      delay(1000);
+      lcd.clear();
+      break;
+    case 5: 
+      trainingStarted = false;
+      digitalWrite(vibrationMotorPin, LOW);
+      lcd.clear();
+      lcd.print("Treino parado");
+      lcd.setCursor(0, 1);
+      lcd.print("Aperte Comecar");
+      break;
+    default:
+      break;
+  }
+}
+```
 
 ---
 
@@ -150,9 +221,10 @@ Adicione a lógica para processar os dados e acionar atuadores, como LEDs ou buz
 
 Descreva os testes para validar cada parte do projeto:
 
-1. **Testando Sensores**: Verifique se as leituras são consistentes e corretas.
-2. **Validação dos Atuadores**: Confirme que os atuadores funcionam corretamente.
-3. **Monitoramento em Tempo Real**: Teste o sistema completo em condições simuladas para garantir que funciona conforme o esperado.
+1. **Testar o Sensor Flexível**: Abra o monitor serial e verifique os valores do sensor quando dobrado e relaxado..
+2. **Testar o Motor Vibratório**: Confirme que o motor vibra quando o progresso atinge 90%.
+3. **Validar o Controle Remoto**: Teste os botões para iniciar e parar o treinamento.
+4. **Monitoramento Contínuo**: Verifique se as messagens "Comecando Treino" e "Treino parado" estão aparecendo no display. Dobre o sensor e veja as mensagens "Continue!", "Quase la!" e "Bom Trabalho!  aparecerem. Continue testando para garantir que o sistema responda de acordo com o limite configurado, logo confirme se a mensagem "Bom Trabalho!" aparece somente quando for 90% ou maior.
 
 ---
 
@@ -160,16 +232,17 @@ Descreva os testes para validar cada parte do projeto:
 
 Sugestões para melhorar o projeto, como:
 
-- Adicionar comunicação Wi-Fi (ESP32) para enviar dados para uma nuvem.
-- Integrar um banco de dados para registro das leituras.
-- Conectar-se a uma aplicação móvel para visualização remota.
+- Adicionar conectividade Wi-Fi para enviar dados a um aplicativo.
+- Implementar armazenamento de progresso em um cartão SD.
+- Criar um aplicativo para visualizar as métricas de desempenho.
 
 ---
 
 ## Referências
 
-Liste todas as referências e links úteis para guias, bibliotecas, e materiais adicionais que ajudem a complementar o tutorial.
+1. [Documentação da Biblioteca LiquidCrystal](https://docs.arduino.cc/libraries/liquidcrystal/)
+2. [Documentação da Biblioteca IRremote](https://github.com/Arduino-IRremote/Arduino-IRremote)
+3. [Tinkercad - Circuitos e Simulação de Arduino](https://www.tinkercad.com/)
 
 ---
 
-Espero que esse modelo ajude a organizar o conteúdo e fornecer uma estrutura clara e completa para tutoriais de IoT no contexto da saúde.
