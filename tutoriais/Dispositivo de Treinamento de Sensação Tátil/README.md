@@ -203,42 +203,42 @@ void setup() {
 }
 ```
 
-### Passo 2: Processamento e Lógica de Alerta
+### Passo 2: Processamento e Lógica do Dispositivo
 
 #### Função loop()
 
 ```cpp
 void loop() {
-  button = readInfrared();
-  if (button >= 0) {
-    handleIRInput(button);
+  button = readInfrared(); //Le o botao pressionado no controle remoto IR
+  if (button >= 0) { //Se um botao valido for detectado
+    handleIRInput(button); //Executa a acao correspondente (iniciar/parar treinamento)
   }
-
+  //Se a sessao de treinamento for iniciada
   if (trainingStarted) {
-    flexValue = analogRead(flexPin);
-    mappedValue = map(flexValue, 33, 6, 0, 100); 
-    mappedValue = constrain(mappedValue, 0, 100);         
+    flexValue = analogRead(flexPin); //Le o valor atual do sensor flexivel e obtem o valor bruto do sensor
+    mappedValue = map(flexValue, 33, 6, 0, 100); //mapea o valor do sensor para uma porcentagem (0-100), 33 = relaxado, 6 = completamente flexionado. Mapeia esta faixa para 0-100
+    mappedValue = constrain(mappedValue, 0, 100);  //Garante que o valor mapeado permaneca na faixa de 0-100%     
 	
-    lcd.setCursor(0, 0);
-    lcd.print("Progresso:       ");
-    lcd.setCursor(0, 0);
-    lcd.print("Progresso: ");
-    lcd.print(mappedValue);
-    lcd.print("%");
+    lcd.setCursor(0, 0); //Move o cursor para a primeira linha, primeira coluna
+    lcd.print("Progresso:       "); //Limpa a linha para evitar caracteres residuais
+    lcd.setCursor(0, 0); //Reseta o cursor para a mesma linha
+    lcd.print("Progresso: "); //Imprime o rotulo do progresso
+    lcd.print(mappedValue); //Imprime o valor do progresso mapeado
+    lcd.print("%"); //Adiciona um sinal de porcentagem para clareza
 
     lcd.setCursor(0, 1);
-    if (mappedValue < 50) {
-      lcd.print("Continue!     ");
-    } else if (mappedValue < 90) {
-      lcd.print("Quase la!");
-    } else {
-      lcd.print("Bom Trabalho!       ");
+    if (mappedValue < 50) { //Se o progresso for menor que 50%
+      lcd.print("Continue!     "); //Motiva o usuario a continuar tentando
+    } else if (mappedValue < 90) { //Se o progresso estiver entre 50% e 90%
+      lcd.print("Quase la!"); //Incentiva o usuario, demonstrando que esta proximo
+    } else { //Se o progresso for 90% ou maior
+      lcd.print("Bom Trabalho!       "); //Parabeniza o usuario pelo o progresso
     }
 
-    if (mappedValue >= 90) {
-      digitalWrite(vibrationMotorPin, HIGH);
+    if (mappedValue >= 90) { //Ativa o motor de vibracao se o progresso for 90% ou maior
+      digitalWrite(vibrationMotorPin, HIGH); //Liga o motor de vibracao
     } else {
-      digitalWrite(vibrationMotorPin, LOW);
+      digitalWrite(vibrationMotorPin, LOW); //Desliga o motor de vibracao
     }
   }
 }
@@ -249,23 +249,23 @@ void loop() {
 ```cpp
 void handleIRInput(int button) {
   switch (button) {
-    case 0: 
-      trainingStarted = true;
-      lcd.clear();
-      lcd.print("Comecando Treino");
-      delay(1000);
+    case 0: //Caso o botao "Ligar" seja pressionado, inicia o treinamento
+      trainingStarted = true; //Define que o treinamento foi iniciado
+      lcd.clear(); //Limpa a tela do LCD para mostrar novas informacoes
+      lcd.print("Comecando Treino"); //Exibe a mensagem entre aspas
+      delay(1000); //Espera 1 segundo para o usuario visualizar a mensagem
       lcd.clear();
       break;
-    case 5: 
-      trainingStarted = false;
-      digitalWrite(vibrationMotorPin, LOW);
+    case 5:  //Caso o botao "Parar" seja pressionado, para o treinamento
+      trainingStarted = false; //Define que o treinamento foi interrompido
+      digitalWrite(vibrationMotorPin, LOW); //Desliga o motor de vibracao, caso esteja ativado
       lcd.clear();
       lcd.print("Treino parado");
-      lcd.setCursor(0, 1);
+      lcd.setCursor(0, 1); //Move o cursor para a segunda linha do LCD
       lcd.print("Aperte Comecar");
       break;
-    default:
-      break;
+    default: //Caso nenhum dos botoes acima seja pressionado
+      break; //Nao faz nada
   }
 }
 ```
