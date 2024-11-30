@@ -32,16 +32,16 @@ O dispositivo em questão é uma solução prática e acessível para apoiar pac
 
 ### Hardware
 
-- **Placa**: Arduino, ESP32, Raspberry Pi
-- **Sensores**: Detalhe cada sensor, como sensores de temperatura, oxímetro, acelerômetro, entre outros
-- **Atuadores**: Como LEDs, buzzer, relés, etc.
-- **Outros componentes**: Jumpers, resistores, display LCD, etc.
+- **Placa**: Arduino Mega ou Mega 2560.
+- **Sensores**: Sensor flexível (Flex Sensor) e Receptor IR (Infravermelho).
+- **Atuadores**: Motor vibratório e Display LCD 16x2.
+- **Outros componentes**: Resistores (1kΩ e 220Ω), uma protoboard e um controle remoto infravermelho.
 
 ### Software
 
-- **Linguagens**: C/C++ para Arduino e ESP32, Python para Raspberry Pi
-- **IDE**: Arduino IDE, Thonny para Raspberry Pi, VS Code (opcional)
-- **Bibliotecas**: Liste as bibliotecas necessárias, como `Adafruit_Sensor`, `DHT`, entre outras.
+- **Linguagens**: C
+- **IDE**: Arduino IDE, Tinkercad(opcional)
+- **Bibliotecas**: `LiquidCrystal`(para controle do display LCD) e `IRremote`(para controle remoto IR -infravermelho).
 
 ---
 
@@ -49,19 +49,22 @@ O dispositivo em questão é uma solução prática e acessível para apoiar pac
 
 ### Passo 1: Instalação do Software
 
-- **Arduino IDE**: Instruções para instalar e configurar a IDE do Arduino para ESP32/Arduino.
-- **Thonny Python**: Configuração do Thonny para programar em Python no Raspberry Pi.
-- **Bibliotecas**: Como instalar as bibliotecas necessárias. Exemplo:
+- **Arduino IDE**: [Baixe](https://www.arduino.cc/en/software) e instale a IDE do Arduino para programar o Arduino Uno.
+- **Bibliotecas**: A biblioteca `LiquidCrystal` e `IRremote` podem ser instaladas como o exemplo mostra abaixo.
 
-```bash
-# Instalar bibliotecas do Python
-pip install Adafruit_DHT
-```
+1. Procure pelo seguinte ícone, após a instalação da IDE:
+![Caminho para a Biblioteca](../Sistema-Alerta/Caminho-Biblioteca.png)
+2. Na área de texto escreva `LiquidCrystal` e escolha a opção "by Arduino".
+3. Analogamente, escreva `IRremote` e escolha a opção "by shirriff, z3t0, ArminJo".
 
 ### Passo 2: Configuração das Placas
 
-- **Arduino/ESP32**: Passos para configurar a placa e selecionar a porta correta na IDE.
-- **Raspberry Pi**: Configuração do GPIO para comunicação com os sensores.
+- Conecte o Arduino Mega ao computador usando um cabo USB.
+- Selecione sua _board_ na opção a seguir:
+![Caminho para a Selecionar Board](../Sistema-Alerta/Caminho-Selecionar-Port.png)
+1. Clique em _Select other board and port_;
+2. Selecione a _board_ **Arduino Mega or Mega 2560**;
+3. Por fim, selecione a _Port_ de sua preferência.
 
 ---
 
